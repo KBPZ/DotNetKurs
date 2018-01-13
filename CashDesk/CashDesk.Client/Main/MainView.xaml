@@ -17,15 +17,6 @@
                 <Label Content="{Binding Amount}"/>
             </StackPanel>
         </DataTemplate>
-        <!-- Шаблон данных для денег в кошельке/деньгохранилище -->
-        <DataTemplate DataType="{x:Type local:MoneyVM}">
-            <StackPanel Orientation="Horizontal">
-                <Button Visibility="{Binding IsInsertVisible}" Command="{Binding InsertCommand}" Margin="5">+</Button>
-                <Image Width="32" Height="32" Source="{Binding Icon}"></Image>
-                <Label Content="{Binding Name}"/>
-                <Label Content="{Binding Amount}"/>
-            </StackPanel>
-        </DataTemplate>
     </Window.Resources>
     <!-- Можно сразу подключить (и создать) нашу VM - MainViewVM.cs -->
     <Window.DataContext>
@@ -34,11 +25,6 @@
     <!-- Грид с двумя колонками, слева интерфейс пользователя, справа - интерфейс автомата (пока пустой)  -->
     <!-- В качестве DataContext и тот и другой будут использовать DataContext этого окна  -->
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <local:UserView Margin="10" />
-        <local:AutomatView Grid.Column="1" Margin="10"/>
+        <local:AutomatView Margin="10"/>
     </Grid>
 </Window>

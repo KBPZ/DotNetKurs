@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Vending.Model
+namespace CashDesk.Model
 {
     public class Product
     {
@@ -13,7 +13,7 @@ namespace Vending.Model
             new Product("Батончик",19),
             new Product("Нечто",670),
         };
-        private Product(string name, int price)
+        internal Product(string name, int price)
         {
             Name = name;
             Price = price;

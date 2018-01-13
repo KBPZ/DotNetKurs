@@ -7,27 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid d:DataContext="{d:DesignInstance {x:Type local:MainViewVM}}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
-        <!--Монетоприемник-->
-        <DockPanel Grid.Row="0" Grid.Column="1">
-            <Label DockPanel.Dock="Top" Content="Монетоприемник"/>
-            <!--Кредит-->
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                <Button Command="{Binding GetChange}" Margin="5">Вернуть сдачу</Button>
-                <Label Content="Кредит:"/>
-                <Label Content="{Binding Credit}"/>
-            </StackPanel>
-            <!--Деньгохранилище-->
-            <ListBox ItemsSource="{Binding AutomataBank}" />
-        </DockPanel>
 
         <!--Товары автомата-->
         <DockPanel Grid.Row="0" Grid.Column="0">
             <Label DockPanel.Dock="Top" Content="Товары"/>
+
+            
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                <Button Command="{Binding AddTest}" Margin="5">Добавить</Button>
+                <Button Command="{Binding BuyTest}" Margin="5">Купить</Button>
+                <Button Command="{Binding ChangeTest}" Margin="5">Изменить</Button>
+            </StackPanel> 
             <ListBox ItemsSource="{Binding ProductsInAutomata}"/>
         </DockPanel>
     </Grid>

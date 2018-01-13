@@ -79,9 +79,6 @@
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainViewVM.cs" />
-    <Compile Include="Main\UserView.xaml.cs">
-      <DependentUpon>UserView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -115,10 +112,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Main\MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Main\UserView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
