@@ -26,8 +26,11 @@ namespace CashDesk.Model
 
         public ProductManager()
         {
-            xdoc = XDocument.Load(_nameFile);
-            if (xdoc == null)
+            try
+            {
+                xdoc = XDocument.Load(_nameFile);
+            }
+            catch (System.IO.FileNotFoundException ex)
             {
                 CreateXml();
                 xdoc= XDocument.Load(_nameFile);
@@ -47,7 +50,7 @@ namespace CashDesk.Model
         {
             XDocument xdoc = new XDocument();
 
-            var products = xdoc.Element(_mainXElement);
+            var products = new XElement(_mainXElement);
 
             foreach (var productStack in Product.Products)
             {

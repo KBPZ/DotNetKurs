@@ -15,8 +15,6 @@ namespace CashDesk.Model
 
         public void BuyProduct(Product product)
         {
-            if (Automata.BuyProduct(product))
-                User.AddProduct(product);
         }
     }
 }
