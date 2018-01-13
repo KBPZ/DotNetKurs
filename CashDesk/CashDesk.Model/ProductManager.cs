@@ -22,10 +22,18 @@ namespace CashDesk.Model
         private const string _priceXElement = "Price";
         private const string _amountXElement = "Amount";
 
-        private XDocument xdoc = XDocument.Load(_nameFile);
+        private XDocument xdoc;
 
         public ProductManager()
         {
+            xdoc = XDocument.Load(_nameFile);
+            if (xdoc == null)
+            {
+                CreateXml();
+                xdoc= XDocument.Load(_nameFile);
+            }
+
+
             _productsInAutomata =
                 ReadFormXml();
             ProductsInAutomata = new ReadOnlyObservableCollection<ProductStack>(_productsInAutomata);
