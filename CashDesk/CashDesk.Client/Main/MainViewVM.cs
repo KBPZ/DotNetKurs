@@ -101,16 +101,9 @@ namespace Vending.Client.Main
                 /*
                 BuyCommand = new DelegateCommand(() => {
                     manager.BuyProduct(ProductStack.Product);
-<<<<<<< HEAD
-                });                //*/
-                RemoveFromBasketCommand = new DelegateCommand(() => {
-                    manager.RemoveFromBasket(ProductStack);
                 });
 
-=======
-                });
                 //*/
->>>>>>> e1ada2bb8f8343b258d2336d562f180ecefa47df
 
                 AddProductToBasketCommand = new DelegateCommand(() => {
                     manager.AddProductToBasket(ProductStack);
@@ -130,14 +123,9 @@ namespace Vending.Client.Main
         }
         public Visibility IsBuyVisible => BuyCommand == null ? Visibility.Collapsed : Visibility.Visible;
         public DelegateCommand BuyCommand { get; }
-<<<<<<< HEAD
-        public DelegateCommand AddProductToBasketCommand { get; } 
-        public DelegateCommand ChangeAmountCommand { get; }
-=======
         public DelegateCommand AddProductToBasketCommand { get; }
         public DelegateCommand PushOneCommand { get; }
         public DelegateCommand PullOneCommand { get; }
->>>>>>> e1ada2bb8f8343b258d2336d562f180ecefa47df
         public DelegateCommand RemoveFromBasketCommand { get; }
         public string Name => ProductStack.Product.Name;
         public string Price => $"({ProductStack.Product.Price} руб.)";
