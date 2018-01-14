@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vending.Client.Main"
+        xmlns:local1="clr-namespace:CashDesk.Client.Main"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="800">
     <Window.Resources>
@@ -26,29 +27,37 @@
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
-    
+
+    <!--
     <Window.DataContext>
         <local:MainViewVM/>
     </Window.DataContext>
-    
+    -->
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <Grid Visibility="{Binding BasketWindow}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <!-- список продуктов в базе -->
-        <DockPanel Grid.Row="0" Grid.Column="0">
-            <Label DockPanel.Dock="Top" Content="Наименование товара" Background="White"/>
-            <ListBox ItemsSource="{Binding ProductsInAutomata}"
+            <!-- список продуктов в базе -->
+            <DockPanel Grid.Row="0" Grid.Column="0">
+                <Label DockPanel.Dock="Top" Content="Наименование товара" Background="White"/>
+                <ListBox ItemsSource="{Binding ProductsInAutomata}"
                      ItemTemplate="{StaticResource ProductListTemplate}"></ListBox>
-        </DockPanel>
+            </DockPanel>
 
-        <!-- какие продукты выбрал клиент -->
-        <DockPanel Grid.Row="0" Grid.Column="1">
-            <Label DockPanel.Dock="Top" Content="Корзина пользователя" Background="White"/>
-            <ListBox ItemsSource="{Binding ProductsInBasket}"
+            <!-- какие продукты выбрал клиент -->
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <Label DockPanel.Dock="Top" Content="Корзина пользователя" Background="White"/>
+                <ListBox ItemsSource="{Binding ProductsInBasket}"
                      ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
-        </DockPanel>
+            </DockPanel>
+        </Grid>
+        <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
+        <Grid Visibility="{Binding AdminWindow}">
+            <Label Content="Место Где что-то должно быть, но его нет"/>
+        </Grid>
     </Grid>
 </Window>

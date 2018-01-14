@@ -65,10 +65,10 @@ namespace CashDesk.Model
             {
                 string salt = NewRandomSalt();
                 users.Add(new XElement(_usersXElement,
-                    new XAttribute(_nameXAtribute, user.Name)),
-                    new XElement(_userType, user.UserType.GetHashCode()),
+                    new XAttribute(_nameXAtribute, user.Name),
+                    new XElement(_userType, (int)user.UserType),
                     new XElement(_salt, salt),
-                    new XElement(_crioptoPassword, Encrypting("1234" + salt))
+                    new XElement(_crioptoPassword, Encrypting("1234" + salt)))
                     );
             }
 
@@ -87,7 +87,7 @@ namespace CashDesk.Model
                 string salt = NewRandomSalt();
                 users.Add(new XElement(_usersXElement,
                     new XAttribute(_nameXAtribute, userName),
-                    new XElement(_userType, userType.GetHashCode()),
+                    new XElement(_userType, (int)userType),
                     new XElement(_salt, salt),
                     new XElement(_crioptoPassword, Encrypting(password + salt)))
                     );
@@ -137,7 +137,7 @@ namespace CashDesk.Model
                 .FirstOrDefault((x) => x.Attribute(_nameXAtribute).Value == name);
             if (user != null)
             {
-                user.Element(_userType).Value = newUserType.GetHashCode().ToString();
+                user.Element(_userType).Value = ((int)newUserType).ToString();
             }
             SaveChanges();
         }

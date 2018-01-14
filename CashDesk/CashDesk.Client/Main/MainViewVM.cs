@@ -9,25 +9,56 @@ using System.Windows;
 using Prism.Commands;
 using Prism.Mvvm;
 using CashDesk.Model;
+using CashDesk.Client.Main;
 
 namespace Vending.Client.Main
 {
-    public class MainViewVM : BindableBase {
-        public MainViewVM() {
+    public class MainViewVM : BindableBase
+    {
+        public MainViewVM()
+        {
             ProductsInAutomata = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(ap => new ProductVM(ap, _manager)));
             Watch(_manager.ProductManager.ProductsInAutomata, ProductsInAutomata, p => p.ProductStack);
 
             ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
+            DeactiveteAllWindow();
+            PasswordWindow = Visibility.Visible;
+
             //AddTest = new DelegateCommand(() => _manager.ProductManager.AddProduct("Чёрная смерть", 10000, 2));
             //ChangeTest = new DelegateCommand(() => _manager.ProductManager.ChangeProduct("Кофе","Кофе 3в1",30));
             //BuyTest = new DelegateCommand(() => _manager.ProductManager.BuyProduct("Чай", 5));
+
+            VerificateUser = new DelegateCommand(
+                () => 
+                {
+                    if (_manager.UserManager.VerificateUser(Login, Password))
+                    {
+                        MessageBox.Show("Добро пожаловать");
+                        var user = _manager.UserManager.GetUserByName(Login);
+                        DeactiveteAllWindow();
+                        if (user.UserType == UserType.Admin)
+                            AdminWindow = Visibility.Visible;
+                        else
+                            BasketWindow = Visibility.Visible;
+                    }
+                    else
+                        MessageBox.Show("Неправильное имя или пароль");
+                });
         }
 
         //public DelegateCommand AddTest { get; }
         //public DelegateCommand ChangeTest { get; }
         //public DelegateCommand BuyTest { get; }
+
+        public string Password { get { return _password; } set { SetProperty(ref _password, value); } }
+        private string _password;
+
+        public string Login { get { return _login; } set { SetProperty(ref _login,value); } }
+        private string _login;
+
+        public DelegateCommand VerificateUser { get; }
         public ObservableCollection<ProductVM> ProductsInAutomata { get; }
         public ObservableCollection<ProductVM> ProductsInBasket { get; }
         private static PurchaseManager _manager = new PurchaseManager();
@@ -42,6 +73,20 @@ namespace Vending.Client.Main
             };
         }                
         
+        private void DeactiveteAllWindow()
+        {
+            PasswordWindow = Visibility.Hidden;
+            BasketWindow = Visibility.Hidden;
+            AdminWindow = Visibility.Hidden;
+        }
+
+        public Visibility PasswordWindow { get { return _passwordWindow; } set { SetProperty(ref _passwordWindow, value); } }
+        private Visibility _passwordWindow;
+        public Visibility BasketWindow { get { return _basketWindow; } set { SetProperty(ref _basketWindow, value); } }
+        private Visibility _basketWindow;
+        public Visibility AdminWindow { get { return _adminWindow; } set { SetProperty(ref _adminWindow, value); } }
+        private Visibility _adminWindow;
+
     }
 
     public class ProductVM : BindableBase
@@ -56,11 +101,11 @@ namespace Vending.Client.Main
                 /*
                 BuyCommand = new DelegateCommand(() => {
                     manager.BuyProduct(ProductStack.Product);
-                });
+                });                //*/
                 RemoveFromBasketCommand = new DelegateCommand(() => {
                     manager.RemoveFromBasket(ProductStack);
                 });
-                //*/
+
 
                 AddProductToBasketCommand = new DelegateCommand(() => {
                     manager.AddProductToBasket(ProductStack);
@@ -73,7 +118,7 @@ namespace Vending.Client.Main
         public DelegateCommand BuyCommand { get; }
         public DelegateCommand AddProductToBasketCommand { get; } 
         public DelegateCommand ChangeAmountCommand { get; }
-        //public DelegateCommand RemoveFromBasketCommand { get; }
+        public DelegateCommand RemoveFromBasketCommand { get; }
         public string Name => ProductStack.Product.Name;
         public string Price => $"({ProductStack.Product.Price} руб.)";
         public int Amount => ProductStack.Amount;

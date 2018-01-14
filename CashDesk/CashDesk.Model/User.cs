@@ -10,22 +10,16 @@ namespace CashDesk.Model
 {
     public class User : BindableBase
     {
-        internal static IReadOnlyList<User> BaseUsers
-        {
-            get
-            {
-                return new List<User>()
+        internal static IReadOnlyList<User> BaseUsers => new List<User>()
                 {
                     new User("Admin",UserType.Admin),
                     new User("User",UserType.Cashier)
                 };
-            }
-        }
 
         public User(string name,UserType userType)
         {
             Name = name;
-            UserType = UserType;
+            UserType = userType;
         }
 
         public string Name { get; }
