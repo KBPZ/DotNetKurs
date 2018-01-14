@@ -8,9 +8,9 @@ namespace CashDesk.Model
 {
     public class PurchaseManager
     {        
-        public User User { get; } = new User();
         public Automata Automata { get; } = new Automata();
         public ProductManager ProductManager { get; } = new ProductManager();
+        public UserManager UserManager { get; } = new UserManager();
 
 
         public void BuyProduct(Product product)

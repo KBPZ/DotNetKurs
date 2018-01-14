@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Prism.Commands;
 using Prism.Mvvm;
 using System.Xml.Linq;
 
@@ -30,7 +28,7 @@ namespace CashDesk.Model
             {
                 xdoc = XDocument.Load(_nameFile);
             }
-            catch (System.IO.FileNotFoundException ex)
+            catch (System.IO.FileNotFoundException)
             {
                 CreateXml();
                 xdoc= XDocument.Load(_nameFile);
@@ -137,7 +135,16 @@ namespace CashDesk.Model
             SaveInXml();
         }
 
-    private void SaveInXml()
+        public void DeleteProduct(string name)
+        {
+            var product = xdoc.Element(_mainXElement).Elements(_productXElement)
+                .FirstOrDefault((x) => x.Attribute(_nameXAtribute).Value == name);
+
+            product.Remove();
+            SaveInXml();
+        }
+
+        private void SaveInXml()
         {
             xdoc.Save(_nameFile);
             ResetCollection();

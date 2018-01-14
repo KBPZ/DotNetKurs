@@ -59,12 +59,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseManager.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="products.xml" />
+    <Content Include="products.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,21 +10,32 @@ namespace CashDesk.Model
 {
     public class User : BindableBase
     {
-        public User()
+        internal static IReadOnlyList<User> BaseUsers
         {
-            //продукты пользователя
-            UserBuyings = new ReadOnlyObservableCollection<ProductStack>(_userBuyings);
+            get
+            {
+                return new List<User>()
+                {
+                    new User("Admin",UserType.Admin),
+                    new User("User",UserType.Cashier)
+                };
+            }
         }
 
-        internal void AddProduct(Product product)
+        public User(string name,UserType userType)
         {
-            var stack = _userBuyings.FirstOrDefault(b => b.Product == product);
-            if (stack == null)
-                _userBuyings.Add(new ProductStack(product, 1));
-            else
-                stack.PushOne();
+            Name = name;
+            UserType = UserType;
         }
-        public ReadOnlyObservableCollection<ProductStack> UserBuyings { get; }
-        private readonly ObservableCollection<ProductStack> _userBuyings = new ObservableCollection<ProductStack>();
+
+        public string Name { get; }
+        public UserType UserType { get; }
     }
+
+    public enum UserType : int
+    {
+        Cashier=0,
+        Admin=1
+    }
+
 }
