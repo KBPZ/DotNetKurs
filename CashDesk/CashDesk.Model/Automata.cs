@@ -10,9 +10,8 @@ namespace CashDesk.Model
     {
         public Automata()
         {
-            _productsInAutomata =
-                new ObservableCollection<ProductStack>(Product.Products.Select(p => new ProductStack(p, 100)));
-            ProductsInAutomata = new ReadOnlyObservableCollection<ProductStack>(_productsInAutomata);
+            //_productsInAutomata =                new ObservableCollection<ProductStack>(Product.Products.Select(p => new ProductStack(p, 100)));
+           // ProductsInAutomata = new ReadOnlyObservableCollection<ProductStack>(_productsInAutomata);
         }
 
         public ReadOnlyObservableCollection<ProductStack> ProductsInAutomata { get; }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Prism.Commands;
 using Prism.Mvvm;
 using System.Xml.Linq;
 
@@ -95,6 +97,25 @@ namespace CashDesk.Model
 
             SaveInXml();
             return true;
+        }
+
+        public bool PopProduct(ProductStack productStack, int count) {
+            String productName = productStack.Product.Name;
+
+            int index = _productsInAutomata.IndexOf(productStack);
+            if (index >= 0 && _productsInAutomata[index].Amount >= count) {
+                _productsInAutomata[index].Pull(count);
+                return true;
+            }
+            return false;
+        }
+        public bool ReturnProduct(ProductStack productStack, int count) {
+            int index = _productsInAutomata.IndexOf(productStack);
+            if (index >= 0) {
+                _productsInAutomata[index].Push(count);
+                return true;
+            }
+            return false;
         }
 
         public void AddProduct(String name, int price, int amount)

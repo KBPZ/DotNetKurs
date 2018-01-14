@@ -8,23 +8,47 @@
         Title="MainWindow" Height="350" Width="800">
     <Window.Resources>
         <!-- Шаблон данных для продуктов в корзине/в наличии -->
-        <!-- Обратите внимание на аттрибут DataType (о нём ниже) -->
-        <DataTemplate DataType="{x:Type local:ProductVM}">
+        <DataTemplate x:Key="ProductListTemplate">
             <StackPanel Orientation="Horizontal">
-                <Button Visibility="{Binding IsBuyVisible}" Command="{Binding BuyCommand}" Margin="5">+</Button>
-                <Label Content="{Binding Name}"/>
-                <Label FontWeight="DemiBold" Content="{Binding Price}"/>
-                <Label Content="{Binding Amount}"/>
+                <Label Width="120" Content="{Binding Name}"/>
+                <Label Width="90" Content="{Binding Price}"/>
+                <Label Width="80" Content="{Binding Amount}"/>
+                <Button Width="80" Command="{Binding AddProductToBasketCommand}">Добавить</Button>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="BasketListTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Label Width="100" Content="{Binding Name}"/>
+                <Label Width="60" Content="{Binding Amount}"/>
+                <Button Width="60" Command="{Binding PushOneCommand}">+</Button>
+                <Button Width="80" Command="{Binding RemoveFromBasketCommand}">Удалить</Button>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
-    <!-- Можно сразу подключить (и создать) нашу VM - MainViewVM.cs -->
+    
     <Window.DataContext>
         <local:MainViewVM/>
     </Window.DataContext>
-    <!-- Грид с двумя колонками, слева интерфейс пользователя, справа - интерфейс автомата (пока пустой)  -->
-    <!-- В качестве DataContext и тот и другой будут использовать DataContext этого окна  -->
+    
     <Grid>
-        <local:AutomatView Margin="10"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!-- список продуктов в базе -->
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <Label DockPanel.Dock="Top" Content="Наименование товара" Background="White"/>
+            <ListBox ItemsSource="{Binding ProductsInAutomata}"
+                     ItemTemplate="{StaticResource ProductListTemplate}"></ListBox>
+        </DockPanel>
+
+        <!-- какие продукты выбрал клиент -->
+        <DockPanel Grid.Row="0" Grid.Column="1">
+            <Label DockPanel.Dock="Top" Content="Корзина пользователя" Background="White"/>
+            <ListBox ItemsSource="{Binding ProductsInBasket}"
+                     ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
+        </DockPanel>
     </Grid>
 </Window>

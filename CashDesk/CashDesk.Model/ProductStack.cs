@@ -20,16 +20,16 @@ namespace CashDesk.Model
             set { SetProperty(ref _amount, value); }
         }
 
-        internal bool PullOne()
+        internal bool Pull(int count)
         {
-            if (Amount > 0)
+            if (Amount >= count)
             {
-                --Amount;
+                Amount -= count;
                 return true;
             }
             return false;
         }
 
-        internal void PushOne() => ++Amount;
+        internal void Push(int count) => Amount += count;
     }
 }
