@@ -37,8 +37,8 @@ namespace Vending.Client.Main
         private static void Watch<T, T2>(ReadOnlyObservableCollection<T> collToWatch, ObservableCollection<T2> collToUpdate,
             Func<T2, object> modelProperty) {
             ((INotifyCollectionChanged)collToWatch).CollectionChanged += (s, a) => {
-                if (a.NewItems?.Count == 1) collToUpdate.Add((T2)Activator.CreateInstance(typeof(T2), (T)a.NewItems[0], null));
-                if (a.OldItems?.Count == 1) collToUpdate.Remove(collToUpdate.First(mv => modelProperty(mv) == a.NewItems[0]));
+                if (a.OldItems?.Count == 1) collToUpdate.Remove(collToUpdate.First(mv => modelProperty(mv) == a.OldItems[0]));
+                if (a.NewItems?.Count == 1) collToUpdate.Add((T2)Activator.CreateInstance(typeof(T2), (T)a.NewItems[0], _manager));                
             };
         }                
         
@@ -57,23 +57,30 @@ namespace Vending.Client.Main
                 BuyCommand = new DelegateCommand(() => {
                     manager.BuyProduct(ProductStack.Product);
                 });
-                RemoveFromBasketCommand = new DelegateCommand(() => {
-                    manager.RemoveFromBasket(ProductStack);
-                });
                 //*/
 
                 AddProductToBasketCommand = new DelegateCommand(() => {
                     manager.AddProductToBasket(ProductStack);
                 });
+                RemoveFromBasketCommand = new DelegateCommand(() => {
+                    manager.RemoveFromBasket(ProductStack);
+                });
+                PushOneCommand = new DelegateCommand(() => {
+                    manager.PushOne(ProductStack);
+                });
+                PullOneCommand = new DelegateCommand(() => {
+                    manager.PullOne(ProductStack);
+                });
 
-                
+
             }
         }
         public Visibility IsBuyVisible => BuyCommand == null ? Visibility.Collapsed : Visibility.Visible;
         public DelegateCommand BuyCommand { get; }
-        public DelegateCommand AddProductToBasketCommand { get; } 
-        public DelegateCommand ChangeAmountCommand { get; }
-        //public DelegateCommand RemoveFromBasketCommand { get; }
+        public DelegateCommand AddProductToBasketCommand { get; }
+        public DelegateCommand PushOneCommand { get; }
+        public DelegateCommand PullOneCommand { get; }
+        public DelegateCommand RemoveFromBasketCommand { get; }
         public string Name => ProductStack.Product.Name;
         public string Price => $"({ProductStack.Product.Price} руб.)";
         public int Amount => ProductStack.Amount;

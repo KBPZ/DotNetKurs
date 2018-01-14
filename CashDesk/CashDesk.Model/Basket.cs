@@ -21,6 +21,12 @@ namespace CashDesk.Model {
             else
                 stack.Push(count);
         }
+        internal void PullProduct(ProductStack productStack, int count) {
+            var stack = _productsInBasket.FirstOrDefault(b => b.Product == productStack.Product);
+            if (stack != null && productStack.Amount >= count) {
+                stack.Pull(count);
+            }
+        }
         internal bool RemoveProduct(ProductStack productStack) {
             if (_productsInBasket.Remove(productStack))
                 return true;

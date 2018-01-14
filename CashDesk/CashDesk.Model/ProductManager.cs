@@ -98,25 +98,23 @@ namespace CashDesk.Model
             SaveInXml();
             return true;
         }
-
-        public bool PopProduct(ProductStack productStack, int count) {
-            String productName = productStack.Product.Name;
-
-            int index = _productsInAutomata.IndexOf(productStack);
-            if (index >= 0 && _productsInAutomata[index].Amount >= count) {
-                _productsInAutomata[index].Pull(count);
-                return true;
-            }
-            return false;
+        
+        /// //////////////
+        public bool PopProduct(Product product, int count) {
+            var stack = _productsInAutomata.FirstOrDefault(b => b.Product == product);
+            if (stack == null || stack.Amount <= 0)
+                return false;
+            stack.Pull(count);
+            return true;
         }
-        public bool ReturnProduct(ProductStack productStack, int count) {
-            int index = _productsInAutomata.IndexOf(productStack);
-            if (index >= 0) {
-                _productsInAutomata[index].Push(count);
-                return true;
-            }
-            return false;
+
+        public void ReturnProduct(Product product, int count) {
+            var stack = _productsInAutomata.FirstOrDefault(b => b.Product == product);
+            stack.Push(count);
+            return;
         }
+
+        /// //////////////
 
         public void AddProduct(String name, int price, int amount)
         {
