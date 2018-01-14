@@ -24,7 +24,9 @@ namespace Vending.Client.Main
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
             DeactiveteAllWindow();
-            PasswordWindow = Visibility.Visible;
+            PasswordWindow = Visibility.Visible;//Окно пароля
+            //AdminWindow = Visibility.Visible;//Окно Админа
+            //BasketWindow = Visibility.Visible;//Окно Покупок
 
             //AddTest = new DelegateCommand(() => _manager.ProductManager.AddProduct("Чёрная смерть", 10000, 2));
             //ChangeTest = new DelegateCommand(() => _manager.ProductManager.ChangeProduct("Кофе","Кофе 3в1",30));
