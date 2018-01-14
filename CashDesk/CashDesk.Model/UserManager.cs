@@ -160,6 +160,17 @@ namespace CashDesk.Model
             return false;
         }
 
+        public ObservableCollection<User> GetAllUsers()
+        {
+            var ret = new ObservableCollection<User>();
+            var users = xdoc.Element(_mainXElement);
+            foreach(var userElement in users.Elements(_usersXElement))
+            {
+                ret.Add(GetUserByName(userElement.Attribute(_nameXAtribute).Value));
+            }
+            return ret;
+        }
+
         public User GetUserByName(string name)
         {
             var user = xdoc.Element(_mainXElement).Elements(_usersXElement)

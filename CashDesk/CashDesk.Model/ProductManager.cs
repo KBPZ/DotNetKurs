@@ -115,6 +115,20 @@ namespace CashDesk.Model
         }
 
         /// //////////////
+        
+        public void BuyProducts()
+        {
+            var products = xdoc.Element(_mainXElement);
+            foreach (var productStack in _productsInAutomata)
+            {
+                var product = products.Elements(_productXElement).FirstOrDefault((x) => x.Attribute(_nameXAtribute).Value == productStack.Product.Name);
+                if (product != null)
+                {
+                    product.Element(_amountXElement).Value = productStack.Amount.ToString();
+                }
+            }
+            SaveInXml();
+        }
 
         public void AddProduct(String name, int price, int amount)
         {
@@ -129,17 +143,19 @@ namespace CashDesk.Model
                     new XElement(_amountXElement, amount)));
             }
             SaveInXml();
+            ResetCollection();
         }
 
         public void AddProductAmount(String name,int amount)
         {
-            var product = xdoc.Element("Products").Elements("Product").FirstOrDefault((x) => x.Attribute("Name").Value == name);
+            var product = xdoc.Element(_mainXElement).Elements(_productXElement).FirstOrDefault((x) => x.Attribute(_nameXAtribute).Value == name);
 
-            var curentAmount = int.Parse(product.Element("Amount").Value);
+            var curentAmount = int.Parse(product.Element(_amountXElement).Value);
 
-            product.Element("Amount").Value = (curentAmount + amount).ToString();
+            product.Element(_amountXElement).Value = (curentAmount + amount).ToString();
 
             SaveInXml();
+            ResetCollection();
         }
 
         public void ChangeProduct(String name, String newName, int newPrice)
@@ -152,6 +168,7 @@ namespace CashDesk.Model
                 product.Element(_priceXElement).Value = newPrice.ToString();
             }
             SaveInXml();
+            ResetCollection();
         }
 
         public void DeleteProduct(string name)
@@ -161,19 +178,22 @@ namespace CashDesk.Model
 
             product.Remove();
             SaveInXml();
+            ResetCollection();
         }
 
         private void SaveInXml()
         {
             xdoc.Save(_nameFile);
-            ResetCollection();
         }
 
         private void ResetCollection()
         {
-            _productsInAutomata.Clear();
-            _productsInAutomata.AddRange(
-                ReadFormXml());
+            for(; _productsInAutomata.Any();)
+            {
+                _productsInAutomata.Remove(_productsInAutomata.First());
+            }
+
+            _productsInAutomata.AddRange(ReadFormXml());
         }
     }
 }
