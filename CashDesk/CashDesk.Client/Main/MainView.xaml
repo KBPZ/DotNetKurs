@@ -14,7 +14,7 @@
                 <Label Width="120" Content="{Binding Name}"/>
                 <Label Width="90" Content="{Binding Price}"/>
                 <Label Width="80" Content="{Binding Amount}"/>
-                <Button Width="80" Command="{Binding AddProductToBasketCommand}">Добавить</Button>
+                <Button Width="80" Command="{Binding AddProductToBasketCommand}" >Добавить</Button>
             </StackPanel>
         </DataTemplate>
 
@@ -22,8 +22,9 @@
             <StackPanel Orientation="Horizontal">
                 <Label Width="100" Content="{Binding Name}"/>
                 <Label Width="60" Content="{Binding Amount}"/>
-                <Button Width="60" Command="{Binding PushOneCommand}">+</Button>
-                <Button Width="80" Command="{Binding RemoveFromBasketCommand}">Удалить</Button>
+                <Button Width="40" Command="{Binding PushOneCommand}" Margin="5">+</Button>
+                <Button Width="40" Command="{Binding PullOneCommand}" Margin="5">-</Button>
+                <Button Width="80" Command="{Binding RemoveFromBasketCommand}" Margin="5">Удалить</Button>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>

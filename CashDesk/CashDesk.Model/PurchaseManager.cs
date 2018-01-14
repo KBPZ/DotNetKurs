@@ -17,16 +17,26 @@ namespace CashDesk.Model
         {
         }
 
-        public void AddProductToBasket(ProductStack productStack) {
-            if (productStack.Amount > 0) {
-                Basket.AddProduct(productStack.Product, 1);//add to busket
-                ProductManager.PopProduct(productStack, 1); //pop from productManager
+        public void AddProductToBasket(ProductStack productStack) { // добавить из меню всех товаров
+            if (ProductManager.PopProduct(productStack.Product, 1)) {
+                Basket.AddProduct(productStack.Product, 1);
             }
         }
 
-        public void RemoveFromBasket(ProductStack productStack) {
+        public void RemoveFromBasket(ProductStack productStack) {//удалить из корзины
             Basket.RemoveProduct(productStack);
-            ProductManager.ReturnProduct(productStack, productStack.Amount);
+            ProductManager.ReturnProduct(productStack.Product, productStack.Amount);
+        }
+
+        public void PushOne(ProductStack productStack) { //добавить к количеству элемента, который находится в корзине из меню корзины
+            if (ProductManager.PopProduct(productStack.Product, 1))
+                Basket.AddProduct(productStack.Product, 1);                           
+        }
+        public void PullOne(ProductStack productStack) { //отнять от элемента, который находится в корзине из меню корзины
+            if (productStack.Amount > 0) {
+                Basket.PullProduct(productStack, 1);
+                ProductManager.ReturnProduct(productStack.Product, 1);
+            }
         }
     }
 }
