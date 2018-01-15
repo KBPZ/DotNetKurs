@@ -18,6 +18,14 @@
             </StackPanel>
         </DataTemplate>
 
+        <DataTemplate x:Key="ProductBaseTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Label Width="120" Content="{Binding Name}"/>
+                <Label Width="90" Content="{Binding Price}"/>
+                <Label Width="80" Content="{Binding Amount}"/>
+            </StackPanel>
+        </DataTemplate>
+
         <DataTemplate x:Key="BasketListTemplate">
             <StackPanel Orientation="Horizontal">
                 <Label Width="100" Content="{Binding Name}"/>
@@ -26,6 +34,26 @@
                 <Button Width="40" Command="{Binding PullOneCommand}" Margin="5">-</Button>
                 <Button Width="80" Command="{Binding RemoveFromBasketCommand}" Margin="5">Удалить</Button>
             </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ProductTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Наименование" />
+                <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Цена" />
+                <Label Grid.Row="1" Grid.Column="1" Content="{Binding Price}" />
+                <Label Grid.Row="2" Grid.Column="0" Content="Количество" />
+                <Label Grid.Row="2" Grid.Column="1" Content="{Binding Amount}" />
+            </Grid>
         </DataTemplate>
     </Window.Resources>
 
@@ -56,9 +84,41 @@
                      ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
             </DockPanel>
         </Grid>
+        
         <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
         <Grid Visibility="{Binding AdminWindow}">
-            <Label Content="Место Где что-то должно быть, но его нет"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!-- список продуктов в базе -->
+            <DockPanel Grid.Row="0" Grid.Column="0">
+                <Label DockPanel.Dock="Top" Content="Товары в базе" Background="White"/>                
+                <ListBox ItemsSource="{Binding ProductsInAutomata}"
+                     ItemTemplate="{StaticResource ProductBaseTemplate}"></ListBox>
+            </DockPanel>
+
+            <!-- выбранный администратором товар -->
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <Label DockPanel.Dock="Top" Content="Изменение товара" Background="White"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <ListBox ItemsSource="{Binding ProductsInBasket}"
+                     ItemTemplate="{StaticResource ProductTemplate}"></ListBox>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Button Content="Добавить новый товар" Margin="3,3,3,3.4" />
+                            <Button Content="Удалить товар" Margin="3,3,3,3.4"/>
+                            <Button Content="Редактировать товар" Margin="3,3,3,3.4"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </DockPanel>            
         </Grid>
     </Grid>
 </Window>
