@@ -52,6 +52,10 @@
 
     <Grid>
         <Grid Visibility="{Binding BasketWindow}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -68,8 +72,13 @@
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <Label DockPanel.Dock="Top" Content="Корзина пользователя" Background="White"/>
                 <ListBox ItemsSource="{Binding ProductsInBasket}"
-                     ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
+                     ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>                
             </DockPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <Label Content="Итого (руб):"/>
+                <Label Content="{Binding FinalPrice}"/>
+            </StackPanel>
         </Grid>
         <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
         <Grid Visibility="{Binding AdminWindow}">
