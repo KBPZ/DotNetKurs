@@ -86,19 +86,10 @@ namespace Vending.Client.Main
         public AdminProductVM TmpSelectedAdminProduct { get { return _tmpSelectedAdminProduct; } set { SetProperty(ref _tmpSelectedAdminProduct, value); } }
         private AdminProductVM _tmpSelectedAdminProduct;
 
-        private DelegateCommand _removeProductCommand;
-        public DelegateCommand RemoveContactCommand => _removeProductCommand ?? (_removeProductCommand = new DelegateCommand(RemoveProduct, CanRemoveProduct));
-
         private void RemoveProduct()
         {
-            _manager.ProductManager.DeleteProduct(TmpSelectedAdminProduct.Name);
-        }
-
-        private bool CanRemoveProduct()
-        {
-            if (TmpSelectedAdminProduct == null)
-                return false;
-            return true;
+            if (TmpSelectedAdminProduct != null)
+                _manager.ProductManager.DeleteProduct(TmpSelectedAdminProduct.Name);
         }
 
         private DelegateCommand _createProductCommand;
@@ -125,6 +116,7 @@ namespace Vending.Client.Main
             AdminWindow = Visibility.Hidden;
             ProductBaseWindow = Visibility.Hidden;
             UserBaseWindow = Visibility.Hidden;
+            ConfirmWindow = Visibility.Hidden;
         }
 
         private DelegateCommand _showProductBaseCommand;
@@ -151,6 +143,31 @@ namespace Vending.Client.Main
             AdminWindow = Visibility.Visible;
         }
 
+        private DelegateCommand _showConfirmWindowCommand;
+        public DelegateCommand ShowConfirmWindowCommand => _showConfirmWindowCommand ?? (_showConfirmWindowCommand = new DelegateCommand(ShowConfirmWindow));
+        private void ShowConfirmWindow()
+        {
+            DeactiveteAllWindow();
+            ConfirmWindow = Visibility.Visible;
+        }
+
+        private DelegateCommand _confirmRemovalCommand;
+        public DelegateCommand ConfirmRemovalCommand => _confirmRemovalCommand ?? (_confirmRemovalCommand = new DelegateCommand(ConfirmRemoval));
+        private void ConfirmRemoval()
+        {
+            DeactiveteAllWindow();
+            RemoveProduct();
+            ProductBaseWindow = Visibility.Visible;
+        }
+
+        private DelegateCommand _denyRemovalCommand;
+        public DelegateCommand DenyRemovalCommand => _denyRemovalCommand ?? (_denyRemovalCommand = new DelegateCommand(DenyRemoval));
+        private void DenyRemoval()
+        {
+            DeactiveteAllWindow();
+            ProductBaseWindow = Visibility.Visible;
+        }
+
         public Visibility PasswordWindow { get { return _passwordWindow; } set { SetProperty(ref _passwordWindow, value); } }
         private Visibility _passwordWindow;
         public Visibility BasketWindow { get { return _basketWindow; } set { SetProperty(ref _basketWindow, value); } }
@@ -161,6 +178,8 @@ namespace Vending.Client.Main
         private Visibility _productBasWindow;
         public Visibility UserBaseWindow { get { return _userBaseWindow; } set { SetProperty(ref _userBaseWindow, value); } }
         private Visibility _userBaseWindow;
+        public Visibility ConfirmWindow { get { return _confirmWindow; } set { SetProperty(ref _confirmWindow, value); } }
+        private Visibility _confirmWindow;       
 
     }
 

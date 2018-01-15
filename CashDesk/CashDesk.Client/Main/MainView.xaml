@@ -132,7 +132,7 @@
             <Grid Grid.Row="1" Grid.Column="0">
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Добавить новый товар" Command="{Binding CreateProductCommand}" Margin="3,3,3,3.4" />
-                    <Button Content="Удалить товар" Command="{Binding RemoveContactCommand}" Margin="3,3,3,3.4"/>
+                    <Button Content="Удалить товар" Command="{Binding ShowConfirmWindowCommand}" Margin="3,3,3,3.4"/>
                     <Button Content="Сохранить изменения" Command="{Binding SaveChanges}" Margin="3,3,3,3.4" />
                 </StackPanel>
             </Grid>
@@ -195,6 +195,16 @@
             <Grid Grid.Row="1" Grid.Column="1">
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Выход" Command="{Binding ShowAdminWindowCommand}" Margin="3,3,3,3.4" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Visibility="{Binding ConfirmWindow}" Height="100" Width="230" Background="LightGray">
+            <Grid Grid.Row="0" Grid.Column="1" Width="Auto">
+                <Label Content="Вы уверены, что хотите удалить товар?" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Content="Да" Command="{Binding ConfirmRemovalCommand}" Height="30" Width="50" Margin="30,3,60,3.4" />
+                    <Button Content="Отмена" Command="{Binding DenyRemovalCommand}" Height="30" Width="50" Margin="3,3,3,3.4" />
                 </StackPanel>
             </Grid>
         </Grid>
