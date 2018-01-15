@@ -17,17 +17,17 @@ namespace Vending.Client.Main
     {
         public MainViewVM()
         {
-            ProductsInAutomata = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(ap => new ProductVM(ap, _manager)));
-            Watch(_manager.ProductManager.ProductsInAutomata, ProductsInAutomata, p => p.ProductStack);
+            ProductsInAutomata = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(ap => new ProductVM(ap, _manager, this)));
+            Watch(this, _manager.ProductManager.ProductsInAutomata, ProductsInAutomata, p => p.ProductStack);
 
-            ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager)));
-            Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
-
+            ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager, this)));
+            Watch(this, _manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
+            
             AdminProducts = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new ProductVM(p, _manager)));
-            Watch(_manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
+            Watch(this, _manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
 
             UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => ap));
-            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p);
+            Watch(this, _manager.UserManager.UsersInBase, UsersInBase, p => p);
 
             DeactiveteAllWindow();
             //PasswordWindow = Visibility.Visible;//Окно пароля
@@ -74,6 +74,11 @@ namespace Vending.Client.Main
         public ObservableCollection<ProductVM> AdminProducts { get; }
         private static PurchaseManager _manager = new PurchaseManager();
 
+        public double _finalPrice;
+        public double FinalPrice {
+            get { return _finalPrice; }
+            set { SetProperty(ref _finalPrice, value); }
+        }
 
         public ProductVM SelectedAdminProduct
         { get
@@ -102,11 +107,11 @@ namespace Vending.Client.Main
 
         //функция синхронизации ReadOnly коллекции элементов модели и соответствующей коллекции VM, 
         //в конструкторы которых передается эти экземпляры модели, указываемые в делегате
-        private static void Watch<T, T2>(ReadOnlyObservableCollection<T> collToWatch, ObservableCollection<T2> collToUpdate,
+        private static void Watch<T, T2, T3>(T3 self, ReadOnlyObservableCollection<T> collToWatch, ObservableCollection<T2> collToUpdate,
             Func<T2, object> modelProperty) {
             ((INotifyCollectionChanged)collToWatch).CollectionChanged += (s, a) => {
                 if (a.OldItems?.Count == 1) collToUpdate.Remove(collToUpdate.First(mv => modelProperty(mv) == a.OldItems[0]));
-                if (a.NewItems?.Count == 1) collToUpdate.Add((T2)Activator.CreateInstance(typeof(T2), (T)a.NewItems[0], _manager));   
+                if (a.NewItems?.Count == 1) collToUpdate.Add((T2)Activator.CreateInstance(typeof(T2), (T)a.NewItems[0], _manager, self));   
             };
         }                
         
@@ -189,33 +194,30 @@ namespace Vending.Client.Main
         public ProductStack ProductStack { get { return _productStack; } set { SetProperty(ref _productStack, value); } }
         public ProductStack _productStack;
         public PurchaseManager Manager { get; }
-        public ProductVM(ProductStack productStack, PurchaseManager manager = null)
-        {
+        
+        public ProductVM(ProductStack productStack, PurchaseManager manager = null, MainViewVM MVVM = null) {
             ProductStack = productStack;
             productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
             productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Price)); };
             productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Name)); };
 
-            if (manager != null)
-            {
-                /*
-                BuyCommand = new DelegateCommand(() => {
-                    manager.BuyProduct(ProductStack.Product);
-                });
-
-                //*/
-
+            if (manager != null && MVVM != null) {
+                double debt;
                 AddProductToBasketCommand = new DelegateCommand(() => {
-                    manager.AddProductToBasket(ProductStack);
+                    manager.AddProductToBasket(ProductStack, out debt);
+                    MVVM.FinalPrice = debt;
                 });
                 RemoveFromBasketCommand = new DelegateCommand(() => {
-                    manager.RemoveFromBasket(ProductStack);
+                    manager.RemoveFromBasket(ProductStack, out debt);
+                    MVVM.FinalPrice = debt;
                 });
                 PushOneCommand = new DelegateCommand(() => {
-                    manager.PushOne(ProductStack);
+                    manager.PushOne(ProductStack, out debt);
+                    MVVM.FinalPrice = debt;
                 });
                 PullOneCommand = new DelegateCommand(() => {
-                    manager.PullOne(ProductStack);
+                    manager.PullOne(ProductStack, out debt);
+                    MVVM.FinalPrice = debt;
                 });
 
 
@@ -223,6 +225,7 @@ namespace Vending.Client.Main
             Manager = manager;
 
         }
+
         public Visibility IsBuyVisible => BuyCommand == null ? Visibility.Collapsed : Visibility.Visible;
         public DelegateCommand BuyCommand { get; }
         public DelegateCommand AddProductToBasketCommand { get; }
