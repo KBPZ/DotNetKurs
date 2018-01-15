@@ -26,13 +26,8 @@ namespace Vending.Client.Main
             AdminProducts = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new ProductVM(p, _manager)));
             Watch(this, _manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
 
-<<<<<<< HEAD
             UsersInBase = new ObservableCollection<UserVM>(_manager.UserManager.UsersInBase.Select(ap => new UserVM(ap,_manager)));
-            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p.User);
-=======
-            UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => ap));
-            Watch(this, _manager.UserManager.UsersInBase, UsersInBase, p => p);
->>>>>>> 796a565b79c251161315a92e11f773583d4d68aa
+            Watch(this, _manager.UserManager.UsersInBase, UsersInBase, p => p.User);
 
             DeactiveteAllWindow();
             PasswordWindow = Visibility.Visible;//Окно пароля
@@ -54,6 +49,8 @@ namespace Vending.Client.Main
                     }
                     else
                         MessageBox.Show("Неправильное имя или пароль");
+                    Login = "";
+                    Password = "";
                 });
 
             AllUserType= new ObservableCollection<UserType>();
