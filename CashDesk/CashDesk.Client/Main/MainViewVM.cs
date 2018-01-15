@@ -388,6 +388,7 @@ namespace Vending.Client.Main
                     Manager.UserManager.ChangeUser(User.Name, Name);
                 if (NewPassword != "")
                     Manager.UserManager.ChangePassword(User.Name, NewPassword);
+                NewPassword = "";
             });
 
             ChangePassword = new DelegateCommand(()=> 
