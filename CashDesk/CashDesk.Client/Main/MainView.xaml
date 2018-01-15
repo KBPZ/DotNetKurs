@@ -133,7 +133,7 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Добавить новый товар" Command="{Binding CreateProductCommand}" Margin="3,3,3,3.4" />
                     <Button Content="Удалить товар" Command="{Binding ShowConfirmWindowCommand}" Margin="3,3,3,3.4"/>
-                    <Button Content="Сохранить изменения" Command="{Binding SaveChanges}" Margin="3,3,3,3.4" />
+                    <Button Content="Сохранить изменения" Command="{Binding SaveChanges}" DataContext="{Binding TmpSelectedAdminProduct}" Margin="3,3,3,3.4" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1">

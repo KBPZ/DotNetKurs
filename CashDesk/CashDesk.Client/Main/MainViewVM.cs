@@ -30,8 +30,8 @@ namespace Vending.Client.Main
             Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p);
 
             DeactiveteAllWindow();
-            PasswordWindow = Visibility.Visible;//Окно пароля
-            //AdminWindow = Visibility.Visible;//Окно Админа
+            //PasswordWindow = Visibility.Visible;//Окно пароля
+            AdminWindow = Visibility.Visible;//Окно Админа
             //BasketWindow = Visibility.Visible;//Окно Покупок
 
             //AddTest = new DelegateCommand(() => _manager.ProductManager.AddProduct("Чёрная смерть", 10000, 2));
@@ -75,13 +75,16 @@ namespace Vending.Client.Main
         private static PurchaseManager _manager = new PurchaseManager();
 
 
-        public ProductVM SelectedAdminProduct { get { return _selectedAdminProduct; }
+        public ProductVM SelectedAdminProduct
+        { get
+            { return _selectedAdminProduct; }
             set
             {
                 SetProperty(ref _selectedAdminProduct, value);
                 if(value!=null)
                     TmpSelectedAdminProduct = new AdminProductVM(value, value.Manager);
-            } }
+            }
+        }
         private ProductVM _selectedAdminProduct;
 
         public AdminProductVM TmpSelectedAdminProduct { get { return _tmpSelectedAdminProduct; } set { SetProperty(ref _tmpSelectedAdminProduct, value); } }
@@ -95,10 +98,7 @@ namespace Vending.Client.Main
 
         private DelegateCommand _createProductCommand;
         public DelegateCommand CreateProductCommand => _createProductCommand ?? (_createProductCommand = new DelegateCommand(CreateProduct));
-        private void CreateProduct()
-        {
-            _manager.ProductManager.AddProduct("Новый товар", 0, 0);
-        }
+        private void CreateProduct() => _manager.ProductManager.AddProduct("Новый товар", 0, 0);
 
         //функция синхронизации ReadOnly коллекции элементов модели и соответствующей коллекции VM, 
         //в конструкторы которых передается эти экземпляры модели, указываемые в делегате
