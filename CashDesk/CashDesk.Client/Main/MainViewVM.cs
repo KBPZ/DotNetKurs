@@ -23,15 +23,15 @@ namespace Vending.Client.Main
             ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
-            AdminProducts = new ObservableCollection<AdminProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new AdminProductVM(p, _manager)));
+            AdminProducts = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
 
             UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => ap));
             Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p);
 
             DeactiveteAllWindow();
-            //PasswordWindow = Visibility.Visible;//Окно пароля
-            AdminWindow = Visibility.Visible;//Окно Админа
+            PasswordWindow = Visibility.Visible;//Окно пароля
+            //AdminWindow = Visibility.Visible;//Окно Админа
             //BasketWindow = Visibility.Visible;//Окно Покупок
 
             //AddTest = new DelegateCommand(() => _manager.ProductManager.AddProduct("Чёрная смерть", 10000, 2));
@@ -71,13 +71,17 @@ namespace Vending.Client.Main
         public ObservableCollection<ProductVM> ProductsInAutomata { get; }
         public ObservableCollection<User> UsersInBase { get; }
         public ObservableCollection<ProductVM> ProductsInBasket { get; }
-        public ObservableCollection<AdminProductVM> AdminProducts { get; }
+        public ObservableCollection<ProductVM> AdminProducts { get; }
         private static PurchaseManager _manager = new PurchaseManager();
 
 
-        public AdminProductVM SelectedAdminProduct { get { return _selectedAdminProduct; }
-            set { SetProperty(ref _selectedAdminProduct, value); TmpSelectedAdminProduct = new AdminProductVM(value.ProductStack, value.Manager); } }
-        private AdminProductVM _selectedAdminProduct;
+        public ProductVM SelectedAdminProduct { get { return _selectedAdminProduct; }
+            set
+            {
+                SetProperty(ref _selectedAdminProduct, value);
+                TmpSelectedAdminProduct = new AdminProductVM(value.ProductStack, value.Manager);
+            } }
+        private ProductVM _selectedAdminProduct;
 
         public AdminProductVM TmpSelectedAdminProduct { get { return _tmpSelectedAdminProduct; } set { SetProperty(ref _tmpSelectedAdminProduct, value); } }
         private AdminProductVM _tmpSelectedAdminProduct;
@@ -141,7 +145,7 @@ namespace Vending.Client.Main
     public class ProductVM : BindableBase
     {
         public ProductStack ProductStack { get; }
-
+        public PurchaseManager Manager { get; }
         public ProductVM(ProductStack productStack, PurchaseManager manager = null)
         {
             ProductStack = productStack;
@@ -171,6 +175,7 @@ namespace Vending.Client.Main
 
 
             }
+            Manager = manager;
 
         }
         public Visibility IsBuyVisible => BuyCommand == null ? Visibility.Collapsed : Visibility.Visible;
