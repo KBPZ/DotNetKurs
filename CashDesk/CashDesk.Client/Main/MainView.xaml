@@ -114,6 +114,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -125,6 +126,7 @@
                             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Price}" />
                             <Label Grid.Row="2" Grid.Column="0" Content="Количество" />
                             <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Amount}" />
+                            <Button Grid.Row="3" Grid.Column="1" Content="Сохранить изменения" Command="{Binding SaveChanges}" Margin="3,3,3,3.4" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -132,8 +134,7 @@
             <Grid Grid.Row="1" Grid.Column="0">
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Добавить новый товар" Command="{Binding CreateProductCommand}" Margin="3,3,3,3.4" />
-                    <Button Content="Удалить товар" Command="{Binding ShowConfirmWindowCommand}" Margin="3,3,3,3.4"/>
-                    <Button Content="Сохранить изменения" Command="{Binding SaveChanges}" DataContext="{Binding TmpSelectedAdminProduct}" Margin="3,3,3,3.4" />
+                    <Button Content="Удалить товар" Command="{Binding ShowConfirmWindowCommand}" Margin="3,3,3,3.4"/>                    
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1">
@@ -172,6 +173,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -181,6 +183,7 @@
                             <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Роль" />
                             <Label Grid.Row="1" Grid.Column="1" Content="{Binding UserType}" />
+                            <Button Grid.Row="2" Grid.Column="1" Content="Сохранить изменения" Margin="3,3,3,3.4" />
                         </Grid>
                     </Grid>
                 </Grid>
