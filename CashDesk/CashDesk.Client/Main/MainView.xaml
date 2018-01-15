@@ -51,8 +51,7 @@
     -->
 
     <Grid>
-        <!-- <Grid Visibility="{Binding BasketWindow}">-->
-        <Grid Visibility="Hidden">
+        <Grid Visibility="{Binding BasketWindow}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
