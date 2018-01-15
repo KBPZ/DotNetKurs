@@ -24,7 +24,7 @@ namespace Vending.Client.Main
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
             UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => new User(ap, _manager)));
-            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p.Name);
+            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p);
 
             DeactiveteAllWindow();
             PasswordWindow = Visibility.Visible;//Окно пароля
