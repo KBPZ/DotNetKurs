@@ -79,7 +79,8 @@ namespace Vending.Client.Main
             set
             {
                 SetProperty(ref _selectedAdminProduct, value);
-                TmpSelectedAdminProduct = new AdminProductVM(value, value.Manager);
+                if(value!=null)
+                    TmpSelectedAdminProduct = new AdminProductVM(value, value.Manager);
             } }
         private ProductVM _selectedAdminProduct;
 
