@@ -43,5 +43,9 @@ namespace CashDesk.Model
             }
             FinalPrice = Basket.FinalPrice;
         }
+        public void BuyProduct() {
+            Basket.BuyProduct();
+            ProductManager.BuyProducts();
+        }
     }
 }
