@@ -53,7 +53,14 @@ namespace Vending.Client.Main
                     Password = "";
                 });
 
-            AllUserType= new ObservableCollection<UserType>();
+            BuyProductCommand = new DelegateCommand(
+               () => {
+                   _manager.BuyProduct();
+                   FinalPrice = 0;
+                   ProductsInBasket.Clear();//не синхронит??
+                });
+
+            AllUserType = new ObservableCollection<UserType>();
             
             foreach(var type in Enum.GetNames(typeof(UserType)))
             {
@@ -90,6 +97,7 @@ namespace Vending.Client.Main
         public DelegateCommand LoginOut { get; }
         public DelegateCommand VerificateUser { get; }
         public DelegateCommand OpenProductBase { get; }
+        public DelegateCommand BuyProductCommand { get; }
         public ObservableCollection<ProductVM> ProductsInAutomata { get; }
         public ObservableCollection<UserVM> UsersInBase { get; }
         public ObservableCollection<ProductVM> ProductsInBasket { get; }

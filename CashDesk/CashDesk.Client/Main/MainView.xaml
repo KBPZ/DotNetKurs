@@ -21,10 +21,11 @@
         <DataTemplate x:Key="BasketListTemplate">
             <StackPanel Orientation="Horizontal">
                 <Label Width="100" Content="{Binding Name}"/>
+                <Label Width="60" Content="{Binding Price}"/>
                 <Label Width="60" Content="{Binding Amount}"/>
-                <Button Width="40" Command="{Binding PushOneCommand}" Margin="5">+</Button>
-                <Button Width="40" Command="{Binding PullOneCommand}" Margin="5">-</Button>
-                <Button Width="80" Command="{Binding RemoveFromBasketCommand}" Margin="5">Удалить</Button>
+                <Button Width="20" Command="{Binding PushOneCommand}" Margin="5">+</Button>
+                <Button Width="20" Command="{Binding PullOneCommand}" Margin="5">-</Button>
+                <Button Width="70" Command="{Binding RemoveFromBasketCommand}" Margin="5">Удалить</Button>
             </StackPanel>
         </DataTemplate>
 
@@ -61,9 +62,14 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <!-- список продуктов в базе -->
+            <!-- список продуктов в базе -->            
             <DockPanel Grid.Row="0" Grid.Column="0">
-                <Label DockPanel.Dock="Top" Content="Наименование товара" Background="White"/>
+                <Label DockPanel.Dock="Top" Content="Список товара" Background="White"/>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Width="120" Content="Название"/>
+                    <Label Width="90" Content="Цена"/>
+                    <Label  Content="Кол-во"/>
+                </StackPanel>
                 <ListBox ItemsSource="{Binding ProductsInAutomata}"
                      ItemTemplate="{StaticResource ProductListTemplate}"></ListBox>
             </DockPanel>
@@ -71,15 +77,24 @@
             <!-- какие продукты выбрал клиент -->
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <Label DockPanel.Dock="Top" Content="Корзина пользователя" Background="White"/>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Width="100" Content="Название"/>
+                    <Label Width="60" Content="Цена"/>
+                    <Label Content="Кол-во"/>
+                </StackPanel>
                 <ListBox ItemsSource="{Binding ProductsInBasket}"
                      ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>                
             </DockPanel>
 
+            <Button Width="300" Grid.Row="1" Grid.Column="0" Content="Выйти на экран ввода паролей" Command="{Binding LoginOut}" Margin="5"/>
+
             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                 <Label Content="Итого (руб):"/>
                 <Label Content="{Binding FinalPrice}"/>
-            </StackPanel>
+                <Button Width="80" Command="{Binding BuyProductCommand}" Margin="5">Купить</Button>
+                 </StackPanel>
         </Grid>
+        
         <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
         <Grid Visibility="{Binding AdminWindow}">
             <Grid.ColumnDefinitions>

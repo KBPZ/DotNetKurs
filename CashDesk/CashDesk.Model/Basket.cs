@@ -39,6 +39,10 @@ namespace CashDesk.Model {
             }
             return _finalPrice;
         }
+        internal void BuyProduct() {
+            _productsInBasket.Clear();
+            _finalPrice = 0;
+        }
 
         public ReadOnlyObservableCollection<ProductStack> ProductsInBasket { get; }
         private readonly ObservableCollection<ProductStack> _productsInBasket = new ObservableCollection<ProductStack>();
