@@ -152,6 +152,7 @@ namespace CashDesk.Model
         private void SaveChanges()
         {
             xdoc.Save(_nameFile);
+            ResetUserCollection();
         }
 
         public bool VerificateUser(string name, string password)
@@ -176,6 +177,16 @@ namespace CashDesk.Model
                 ret.Add(GetUserByName(userElement.Attribute(_nameXAtribute).Value));
             }
             return ret;
+        }
+
+        public void ResetUserCollection()
+        {
+            while(_usersInBase.Any())
+            {
+                _usersInBase.Remove(_usersInBase.First());
+            }
+
+            _usersInBase.AddRange(GetAllUsers());
         }
 
         public User GetUserByName(string name)

@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Automata.cs" />
     <Compile Include="Basket.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductManager.cs" />

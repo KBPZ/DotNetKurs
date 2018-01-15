@@ -26,17 +26,13 @@ namespace Vending.Client.Main
             AdminProducts = new ObservableCollection<ProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
 
-            UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => ap));
-            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p);
+            UsersInBase = new ObservableCollection<UserVM>(_manager.UserManager.UsersInBase.Select(ap => new UserVM(ap,_manager)));
+            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p.User);
 
             DeactiveteAllWindow();
-            //PasswordWindow = Visibility.Visible;//Окно пароля
-            AdminWindow = Visibility.Visible;//Окно Админа
+            PasswordWindow = Visibility.Visible;//Окно пароля
+            //AdminWindow = Visibility.Visible;//Окно Админа
             //BasketWindow = Visibility.Visible;//Окно Покупок
-
-            //AddTest = new DelegateCommand(() => _manager.ProductManager.AddProduct("Чёрная смерть", 10000, 2));
-            //ChangeTest = new DelegateCommand(() => _manager.ProductManager.ChangeProduct("Кофе","Кофе 3в1",30));
-            //BuyTest = new DelegateCommand(() => _manager.ProductManager.BuyProduct("Чай", 5));
 
             VerificateUser = new DelegateCommand(
                 () => 
@@ -54,11 +50,30 @@ namespace Vending.Client.Main
                     else
                         MessageBox.Show("Неправильное имя или пароль");
                 });
-        }
 
-        //public DelegateCommand AddTest { get; }
-        //public DelegateCommand ChangeTest { get; }
-        //public DelegateCommand BuyTest { get; }
+            AllUserType= new ObservableCollection<UserType>();
+            
+            foreach(var type in Enum.GetNames(typeof(UserType)))
+            {
+                AllUserType.Add((UserType)Enum.Parse(typeof(UserType), type));
+            }
+
+            NewUser = new DelegateCommand(() => 
+            {
+                _manager.UserManager.AddUser("New User", UserType.Cashier, "1234");
+            });
+            DeleteUser = new DelegateCommand(() => 
+            {
+                if(FocuseUser!=null)
+                    _manager.UserManager.DeleteUser(FocuseUser.Name);
+            });
+
+            LoginOut = new DelegateCommand(() =>
+            {
+                DeactiveteAllWindow();
+                PasswordWindow = Visibility.Visible;
+            });
+        }
 
         public string Password { get { return _password; } set { SetProperty(ref _password, value); } }
         private string _password;
@@ -66,10 +81,12 @@ namespace Vending.Client.Main
         public string Login { get { return _login; } set { SetProperty(ref _login,value); } }
         private string _login;
 
+
+        public DelegateCommand LoginOut { get; }
         public DelegateCommand VerificateUser { get; }
         public DelegateCommand OpenProductBase { get; }
         public ObservableCollection<ProductVM> ProductsInAutomata { get; }
-        public ObservableCollection<User> UsersInBase { get; }
+        public ObservableCollection<UserVM> UsersInBase { get; }
         public ObservableCollection<ProductVM> ProductsInBasket { get; }
         public ObservableCollection<ProductVM> AdminProducts { get; }
         private static PurchaseManager _manager = new PurchaseManager();
@@ -169,6 +186,44 @@ namespace Vending.Client.Main
             ProductBaseWindow = Visibility.Visible;
         }
 
+        public UserVM FocuseUser
+        {
+            get { return _focuseUser; }
+            set
+            {
+                SetProperty(ref _focuseUser, value);
+                if (value != null)
+                {
+                    TmpFocuseUser = new ChangebleUserVM(value.User, value.Manager);
+                    FocusedType = value.UserType;
+                }
+            }
+        }
+        private UserVM _focuseUser;
+
+        public ChangebleUserVM TmpFocuseUser { get => _tmpFocuseUser; set => SetProperty(ref _tmpFocuseUser, value); }
+        private ChangebleUserVM _tmpFocuseUser;
+
+        public ObservableCollection<UserType> AllUserType { get; }
+
+        public UserType FocusedType
+        {
+            get => _focusedType;
+            set
+            {
+                SetProperty(ref _focusedType, value);
+                if (TmpFocuseUser != null)
+                {
+                    TmpFocuseUser.UserTypeValue = value;
+                }
+            }
+        }
+        private UserType _focusedType;
+
+        public DelegateCommand NewUser { get; }
+        public DelegateCommand DeleteUser { get; }
+
+
         public Visibility PasswordWindow { get { return _passwordWindow; } set { SetProperty(ref _passwordWindow, value); } }
         private Visibility _passwordWindow;
         public Visibility BasketWindow { get { return _basketWindow; } set { SetProperty(ref _basketWindow, value); } }
@@ -232,8 +287,6 @@ namespace Vending.Client.Main
         public string Name => ProductStack.Product.Name;
         public string Price => $"({ProductStack.Product.Price} руб.)";
         public int Amount => ProductStack.Amount;
-
-        
     }
 
 
@@ -282,5 +335,68 @@ namespace Vending.Client.Main
         private int _TmpPrice;
         public int Amount { get { return _TmpAmount; } set { SetProperty(ref _TmpAmount, value);} }
         private int _TmpAmount;
+    }
+
+    public class UserVM : BindableBase
+    {
+        public User User { get=>_user ; set=> SetProperty(ref _user,value); }
+        private User _user;
+        public PurchaseManager Manager { get; set; }
+
+        public UserVM(User user, PurchaseManager manager)
+        {
+            user.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Name)); };
+            user.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(UserType)); };
+            User = user;
+            Manager = manager;
+        }
+        public string Name => User.Name;
+        public UserType UserType => User.UserType;
+    }
+
+
+    public class ChangebleUserVM : BindableBase
+    {
+        public User User { get; }
+        public PurchaseManager Manager { get; }
+
+        public ChangebleUserVM(User user, PurchaseManager manager)
+        {
+            user.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Name)); };
+            user.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(UserTypeValue)); };
+            User = user;
+            Manager = manager;
+            _name = User.Name;
+            SaveChanges = new DelegateCommand(() =>
+            {
+                if(User.UserType!= UserTypeValue)
+                    Manager.UserManager.ChangeUser(User.Name, UserTypeValue);
+                if (User.Name != Name)
+                    Manager.UserManager.ChangeUser(User.Name, Name);
+                if (NewPassword != "")
+                    Manager.UserManager.ChangePassword(User.Name, NewPassword);
+            });
+
+            ChangePassword = new DelegateCommand(()=> 
+            {
+                if (NewPassword != "")
+                    Manager.UserManager.ChangePassword(User.Name, NewPassword);
+            });
+        }
+
+
+        public DelegateCommand SaveChanges { get; }
+
+        public DelegateCommand ChangePassword { get; }
+
+        public string NewPassword { get => _newPassword; set => SetProperty(ref _newPassword, value); }
+        private string _newPassword="";
+
+        public string Name { get { return _name; } set { SetProperty(ref _name, value); } }
+        private string _name;
+
+        public UserType UserTypeValue { get => userTypeValue; set => userTypeValue = value; }
+        private UserType userTypeValue;
+
     }
 }
