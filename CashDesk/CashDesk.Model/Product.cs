@@ -19,7 +19,7 @@ namespace CashDesk.Model
             Name = name;
             Price = price;
         }
-        public string Name { get; }
-        public int Price { get; }
+        public string Name { get; set; }
+        public int Price { get; set; }
     }
 }

@@ -23,9 +23,12 @@ namespace Vending.Client.Main
             ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
+            AdminProducts = new ObservableCollection<AdminProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new AdminProductVM(p, _manager)));
+            Watch(_manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
+
             DeactiveteAllWindow();
-            PasswordWindow = Visibility.Visible;//Окно пароля
-            //AdminWindow = Visibility.Visible;//Окно Админа
+            //PasswordWindow = Visibility.Visible;//Окно пароля
+            AdminWindow = Visibility.Visible;//Окно Админа
             //BasketWindow = Visibility.Visible;//Окно Покупок
 
             //AddTest = new DelegateCommand(() => _manager.ProductManager.AddProduct("Чёрная смерть", 10000, 2));
@@ -63,7 +66,16 @@ namespace Vending.Client.Main
         public DelegateCommand VerificateUser { get; }
         public ObservableCollection<ProductVM> ProductsInAutomata { get; }
         public ObservableCollection<ProductVM> ProductsInBasket { get; }
+        public ObservableCollection<AdminProductVM> AdminProducts { get; }
         private static PurchaseManager _manager = new PurchaseManager();
+
+
+        public AdminProductVM SelectedAdminProduct { get { return _selectedAdminProduct; }
+            set { SetProperty(ref _selectedAdminProduct, value); TmpSelectedAdminProduct = new AdminProductVM(value.ProductStack, value.Manager); } }
+        private AdminProductVM _selectedAdminProduct;
+
+        public AdminProductVM TmpSelectedAdminProduct { get { return _tmpSelectedAdminProduct; } set { SetProperty(ref _tmpSelectedAdminProduct, value); } }
+        private AdminProductVM _tmpSelectedAdminProduct;
 
         //функция синхронизации ReadOnly коллекции элементов модели и соответствующей коллекции VM, 
         //в конструкторы которых передается эти экземпляры модели, указываемые в делегате
@@ -71,7 +83,7 @@ namespace Vending.Client.Main
             Func<T2, object> modelProperty) {
             ((INotifyCollectionChanged)collToWatch).CollectionChanged += (s, a) => {
                 if (a.OldItems?.Count == 1) collToUpdate.Remove(collToUpdate.First(mv => modelProperty(mv) == a.OldItems[0]));
-                if (a.NewItems?.Count == 1) collToUpdate.Add((T2)Activator.CreateInstance(typeof(T2), (T)a.NewItems[0], _manager));                
+                if (a.NewItems?.Count == 1) collToUpdate.Add((T2)Activator.CreateInstance(typeof(T2), (T)a.NewItems[0], _manager));   
             };
         }                
         
@@ -94,12 +106,14 @@ namespace Vending.Client.Main
     public class ProductVM : BindableBase
     {
         public ProductStack ProductStack { get; }
+
         public ProductVM(ProductStack productStack, PurchaseManager manager = null)
         {
             ProductStack = productStack;
             productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
 
-            if (manager != null) {
+            if (manager != null)
+            {
                 /*
                 BuyCommand = new DelegateCommand(() => {
                     manager.BuyProduct(ProductStack.Product);
@@ -122,6 +136,7 @@ namespace Vending.Client.Main
 
 
             }
+
         }
         public Visibility IsBuyVisible => BuyCommand == null ? Visibility.Collapsed : Visibility.Visible;
         public DelegateCommand BuyCommand { get; }
@@ -136,4 +151,49 @@ namespace Vending.Client.Main
         
     }
 
+
+    public class AdminProductVM : BindableBase
+    {
+        public ProductStack ProductStack { get; }
+        public PurchaseManager Manager { get; }
+
+        public AdminProductVM(ProductStack productStack, PurchaseManager manager = null)
+        {
+            Manager = manager;
+            ProductStack = productStack;
+            productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
+
+            if (manager != null)
+            {
+
+            }
+
+            SaveChanges = new DelegateCommand(() =>
+            {
+                if(Amount!= ProductStack.Amount)
+                {
+                    Manager.ProductManager.AddProductAmount(ProductStack.Product.Name, Amount - ProductStack.Amount);
+                }
+
+                if(Price!=ProductStack.Product.Price || Name != ProductStack.Product.Name)
+                {
+                    Manager.ProductManager.ChangeProduct(ProductStack.Product.Name, Name, Price);
+                }
+
+            });
+
+            _TmpName = ProductStack.Product.Name;
+            _TmpPrice = ProductStack.Product.Price;
+            _TmpAmount = ProductStack.Amount;
+        }
+
+        public DelegateCommand SaveChanges { get; }
+
+        public string Name { get { return _TmpName; } set { SetProperty(ref _TmpName, value); } }
+        private string _TmpName;
+        public int Price { get { return _TmpPrice; } set { SetProperty(ref _TmpPrice, value); } }
+        private int _TmpPrice;
+        public int Amount { get { return _TmpAmount; } set { SetProperty(ref _TmpAmount, value);} }
+        private int _TmpAmount;
+    }
 }

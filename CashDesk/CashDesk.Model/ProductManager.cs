@@ -150,12 +150,19 @@ namespace CashDesk.Model
         {
             var product = xdoc.Element(_mainXElement).Elements(_productXElement).FirstOrDefault((x) => x.Attribute(_nameXAtribute).Value == name);
 
-            var curentAmount = int.Parse(product.Element(_amountXElement).Value);
 
-            product.Element(_amountXElement).Value = (curentAmount + amount).ToString();
+
+            if (product != null)
+            {
+                int curentAmount = int.Parse(product.Element(_amountXElement).Value);
+                product.Element(_amountXElement).Value = (curentAmount + amount).ToString();
+                var productInAutomata = _productsInAutomata.First(x => x.Product.Name == name);
+
+                productInAutomata.Amount = (curentAmount + amount);
+            }
 
             SaveInXml();
-            ResetCollection();
+            //ResetCollection();
         }
 
         public void ChangeProduct(String name, String newName, int newPrice)
@@ -166,9 +173,14 @@ namespace CashDesk.Model
             {
                 product.Attribute(_nameXAtribute).Value = newName;
                 product.Element(_priceXElement).Value = newPrice.ToString();
+
+                var productInAutomata = _productsInAutomata.First(x => x.Product.Name == name);
+                productInAutomata.Product.Name = newName;
+                productInAutomata.Product.Price = newPrice;
+
             }
             SaveInXml();
-            ResetCollection();
+            //ResetCollection();
         }
 
         public void DeleteProduct(string name)

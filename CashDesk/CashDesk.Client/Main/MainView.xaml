@@ -45,7 +45,8 @@
     -->
 
     <Grid>
-        <Grid Visibility="{Binding BasketWindow}">
+        <!-- <Grid Visibility="{Binding BasketWindow}">-->
+        <Grid Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -65,8 +66,9 @@
                      ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
             </DockPanel>
         </Grid>
+
+        <!-- <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>-->
         
-        <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
         <Grid Visibility="{Binding AdminWindow}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -79,14 +81,14 @@
             <!-- список продуктов в базе -->
             <DockPanel Grid.Row="0" Grid.Column="0">
                 <Label DockPanel.Dock="Top" Content="Товары в базе" Background="White"/>
-                <ListBox x:Name ="productBase" ItemsSource="{Binding ProductsInAutomata}" SelectedItem="{Binding SelectedItem}"
+                <ListBox x:Name ="productBase" ItemsSource="{Binding AdminProducts}" SelectedItem="{Binding SelectedAdminProduct}"
                      ItemTemplate="{StaticResource ProductBaseTemplate}"></ListBox>
             </DockPanel>
 
             <!-- выбранный администратором товар -->
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <Label DockPanel.Dock="Top" Content="Изменение товара" Background="White"/>
-                <Grid DataContext="{Binding ElementName=productBase, Path=SelectedItem}">
+                <Grid DataContext="{Binding TmpSelectedAdminProduct}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -103,16 +105,16 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Content="Наименование" />
-                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Цена" />
-                            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Price}" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Price}" />
                             <Label Grid.Row="2" Grid.Column="0" Content="Количество" />
                             <Label Grid.Row="2" Grid.Column="1" Content="{Binding Amount}" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Row="1">
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Button Content="Сохранить изменения" Margin="3,3,3,3.4" />
+                            <Button Content="Сохранить изменения" Margin="3,3,3,3.4" Command="{Binding SaveChanges}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
