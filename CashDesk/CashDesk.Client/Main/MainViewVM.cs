@@ -30,9 +30,9 @@ namespace Vending.Client.Main
             Watch(this, _manager.UserManager.UsersInBase, UsersInBase, p => p.User);
 
             DeactiveteAllWindow();
-            PasswordWindow = Visibility.Visible;//Окно пароля
-            //AdminWindow = Visibility.Visible;//Окно Админа
-            //BasketWindow = Visibility.Visible;//Окно Покупок
+            PasswordWindow = Visibility.Visible;
+            //AdminWindow = Visibility.Visible;
+            //BasketWindow = Visibility.Visible;
 
             VerificateUser = new DelegateCommand(
                 () => 
@@ -66,7 +66,10 @@ namespace Vending.Client.Main
             });
             DeleteUser = new DelegateCommand(() => 
             {
-                if(FocuseUser!=null)
+                if(FocuseUser!=null&& MessageBox.Show(
+                    "Вы уверены что хотите удалить этого пользователя?",
+                    "Сообщение",
+                    MessageBoxButton.YesNoCancel)==MessageBoxResult.Yes)
                     _manager.UserManager.DeleteUser(FocuseUser.Name);
             });
 
@@ -242,8 +245,7 @@ namespace Vending.Client.Main
         public Visibility UserBaseWindow { get { return _userBaseWindow; } set { SetProperty(ref _userBaseWindow, value); } }
         private Visibility _userBaseWindow;
         public Visibility ConfirmWindow { get { return _confirmWindow; } set { SetProperty(ref _confirmWindow, value); } }
-        private Visibility _confirmWindow;       
-
+        private Visibility _confirmWindow;
     }
 
     public class ProductVM : BindableBase
@@ -293,7 +295,6 @@ namespace Vending.Client.Main
         public string Price => $"({ProductStack.Product.Price} руб.)";
         public int Amount => ProductStack.Amount;
     }
-
 
     public class AdminProductVM : BindableBase
     {
@@ -348,7 +349,7 @@ namespace Vending.Client.Main
         private User _user;
         public PurchaseManager Manager { get; set; }
 
-        public UserVM(User user, PurchaseManager manager)
+        public UserVM(User user, PurchaseManager manager, MainViewVM MVVM = null)
         {
             user.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Name)); };
             user.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(UserType)); };
@@ -358,7 +359,6 @@ namespace Vending.Client.Main
         public string Name => User.Name;
         public UserType UserType => User.UserType;
     }
-
 
     public class ChangebleUserVM : BindableBase
     {
