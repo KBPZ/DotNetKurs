@@ -25,11 +25,12 @@ namespace CashDesk.Model
             UserType = userType;
         }
 
+        /*
         public User(User ap, PurchaseManager manager)
         {
             this.ap = ap;
             _manager = manager;
-        }
+        }*/
 
         public string Name { get; }
         public UserType UserType { get; }

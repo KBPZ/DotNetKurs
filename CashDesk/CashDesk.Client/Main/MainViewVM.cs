@@ -23,13 +23,11 @@ namespace Vending.Client.Main
             ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
-<<<<<<< HEAD
             AdminProducts = new ObservableCollection<AdminProductVM>(_manager.ProductManager.ProductsInAutomata.Select(p => new AdminProductVM(p, _manager)));
             Watch(_manager.ProductManager.ProductsInAutomata, AdminProducts, p => p.ProductStack);
-=======
-            UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => new User(ap, _manager)));
+
+            UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => ap));
             Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p);
->>>>>>> a9ab909b6f30311725f9f59b6d7574bf406803f5
 
             DeactiveteAllWindow();
             //PasswordWindow = Visibility.Visible;//Окно пароля

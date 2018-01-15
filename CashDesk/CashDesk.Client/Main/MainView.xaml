@@ -72,14 +72,7 @@
                      ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
             </DockPanel>
         </Grid>
-
-<<<<<<< HEAD
-        <!-- <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>-->
-        
-=======
         <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
-
->>>>>>> a9ab909b6f30311725f9f59b6d7574bf406803f5
         <Grid Visibility="{Binding AdminWindow}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -128,28 +121,19 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Content="Наименование" />
-<<<<<<< HEAD
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Цена" />
                             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Price}" />
-=======
-                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
-                            <Label Grid.Column="0" Content="Цена" Height="26" Margin="0,26,0.4,0" Grid.RowSpan="2" VerticalAlignment="Top" />
-                            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Price}" />
->>>>>>> a9ab909b6f30311725f9f59b6d7574bf406803f5
                             <Label Grid.Row="2" Grid.Column="0" Content="Количество" />
                             <Label Grid.Row="2" Grid.Column="1" Content="{Binding Amount}" />
                         </Grid>
                     </Grid>
-<<<<<<< HEAD
                     <Grid Grid.Row="1">
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
                             <Button Content="Сохранить изменения" Margin="3,3,3,3.4" Command="{Binding SaveChanges}"/>
                         </StackPanel>
-                    </Grid>
-=======
->>>>>>> a9ab909b6f30311725f9f59b6d7574bf406803f5
                 </Grid>
+        </Grid>
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="0">
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
