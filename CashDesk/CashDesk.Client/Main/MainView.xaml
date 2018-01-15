@@ -18,6 +18,16 @@
             </StackPanel>
         </DataTemplate>
 
+        <DataTemplate x:Key="BasketListTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Label Width="100" Content="{Binding Name}"/>
+                <Label Width="60" Content="{Binding Amount}"/>
+                <Button Width="40" Command="{Binding PushOneCommand}" Margin="5">+</Button>
+                <Button Width="40" Command="{Binding PullOneCommand}" Margin="5">-</Button>
+                <Button Width="80" Command="{Binding RemoveFromBasketCommand}" Margin="5">Удалить</Button>
+            </StackPanel>         
+        </DataTemplate>
+
         <DataTemplate x:Key="ProductBaseTemplate">
             <StackPanel Orientation="Horizontal">
                 <Label Width="120" Content="{Binding Name}"/>
@@ -26,16 +36,12 @@
             </StackPanel>
         </DataTemplate>
 
-        <DataTemplate x:Key="BasketListTemplate">
+        <DataTemplate x:Key="UserBaseTemplate">
             <StackPanel Orientation="Horizontal">
-                <Label Width="100" Content="{Binding Name}"/>
-                <Label Width="60" Content="{Binding Amount}"/>
-                <Button Width="40" Command="{Binding PushOneCommand}" Margin="5">+</Button>
-                <Button Width="40" Command="{Binding PullOneCommand}" Margin="5">-</Button>
-                <Button Width="80" Command="{Binding RemoveFromBasketCommand}" Margin="5">Удалить</Button>
+                <Label Width="120" Content="{Binding Name}"/>
+                <Label Width="90" Content="{Binding UserType}"/>
             </StackPanel>
         </DataTemplate>
-
     </Window.Resources>
 
     <!--
@@ -65,9 +71,22 @@
                      ItemTemplate="{StaticResource BasketListTemplate}"></ListBox>
             </DockPanel>
         </Grid>
-        
+
         <local1:PasswordWindow Grid.Column="2" Visibility="{Binding PasswordWindow}"/>
+
         <Grid Visibility="{Binding AdminWindow}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="Изменение базы товаров" Command="{Binding ShowProductBaseCommand}" Margin="3,3,10,3.4" Height="50" Width="180"/>
+                <Button Content="Изменение базы пользователей" Command="{Binding ShowUserBaseCommand}" Margin="3,3,3,3.4" Height="50" Width="180"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Visibility="{Binding ProductBaseWindow}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -104,16 +123,11 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Content="Наименование" />
                             <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
-                            <Label Grid.Row="1" Grid.Column="0" Content="Цена" />
+                            <Label Grid.Column="0" Content="Цена" Height="26" Margin="0,26,0.4,0" Grid.RowSpan="2" VerticalAlignment="Top" />
                             <Label Grid.Row="1" Grid.Column="1" Content="{Binding Price}" />
                             <Label Grid.Row="2" Grid.Column="0" Content="Количество" />
                             <Label Grid.Row="2" Grid.Column="1" Content="{Binding Amount}" />
                         </Grid>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Button Content="Сохранить изменения" Margin="3,3,3,3.4" />
-                        </StackPanel>
                     </Grid>
                 </Grid>
             </DockPanel>
@@ -121,8 +135,71 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Добавить новый товар" Margin="3,3,3,3.4" />
                     <Button Content="Удалить товар" Margin="3,3,3,3.4"/>
+                    <Button Content="Сохранить изменения" Margin="3,3,3,3.4" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="1">
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Content="Выход" Command="{Binding ShowAdminWindowCommand}" Margin="3,3,3,3.4" />
                 </StackPanel>
             </Grid>
         </Grid>
+
+        <Grid Visibility="{Binding UserBaseWindow}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!-- список пользователей в базе -->
+            <DockPanel Grid.Row="0" Grid.Column="0">
+                <Label DockPanel.Dock="Top" Content="Пользователи в базе" Background="White"/>
+                <ListBox x:Name ="userBase" ItemsSource="{Binding UsersInBase}" SelectedItem="{Binding SelectedItem}"
+                     ItemTemplate="{StaticResource UserBaseTemplate}"></ListBox>
+            </DockPanel>
+
+            <!-- выбранный администратором пользователь -->
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <Label DockPanel.Dock="Top" Content="Изменение пользователя" Background="White"/>
+                <Grid DataContext="{Binding ElementName=userBase, Path=SelectedItem}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Имя" />
+                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="Роль" />
+                            <Label Grid.Row="1" Grid.Column="1" Content="{Binding UserType}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+            <Grid Grid.Row="1" Grid.Column="0">
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Content="Добавить пользователя" Margin="3,3,3,3.4" />
+                    <Button Content="Удалить пользователя" Margin="3,3,3,3.4"/>
+                    <Button Content="Сохранить изменения" Margin="3,3,3,3.4" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="1">
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Content="Выход" Command="{Binding ShowAdminWindowCommand}" Margin="3,3,3,3.4" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
     </Grid>
 </Window>

@@ -23,6 +23,9 @@ namespace Vending.Client.Main
             ProductsInBasket = new ObservableCollection<ProductVM>(_manager.Basket.ProductsInBasket.Select(p => new ProductVM(p, _manager)));
             Watch(_manager.Basket.ProductsInBasket, ProductsInBasket, p => p.ProductStack);
 
+            UsersInBase = new ObservableCollection<User>(_manager.UserManager.UsersInBase.Select(ap => new User(ap, _manager)));
+            Watch(_manager.UserManager.UsersInBase, UsersInBase, p => p.Name);
+
             DeactiveteAllWindow();
             PasswordWindow = Visibility.Visible;//Окно пароля
             //AdminWindow = Visibility.Visible;//Окно Админа
@@ -61,7 +64,9 @@ namespace Vending.Client.Main
         private string _login;
 
         public DelegateCommand VerificateUser { get; }
+        public DelegateCommand OpenProductBase { get; }
         public ObservableCollection<ProductVM> ProductsInAutomata { get; }
+        public ObservableCollection<User> UsersInBase { get; }
         public ObservableCollection<ProductVM> ProductsInBasket { get; }
         private static PurchaseManager _manager = new PurchaseManager();
 
@@ -80,6 +85,32 @@ namespace Vending.Client.Main
             PasswordWindow = Visibility.Hidden;
             BasketWindow = Visibility.Hidden;
             AdminWindow = Visibility.Hidden;
+            ProductBaseWindow = Visibility.Hidden;
+            UserBaseWindow = Visibility.Hidden;
+        }
+
+        private DelegateCommand _showProductBaseCommand;
+        public DelegateCommand ShowProductBaseCommand => _showProductBaseCommand ?? (_showProductBaseCommand = new DelegateCommand(ShowProductBase));
+        private void ShowProductBase()
+        {
+            DeactiveteAllWindow();
+            ProductBaseWindow = Visibility.Visible;
+        }
+
+        private DelegateCommand _showUserBaseCommand;
+        public DelegateCommand ShowUserBaseCommand => _showUserBaseCommand ?? (_showUserBaseCommand = new DelegateCommand(ShowUserBase));
+        private void ShowUserBase()
+        {
+            DeactiveteAllWindow();
+            UserBaseWindow = Visibility.Visible;
+        }
+
+        private DelegateCommand _showAdminWindowCommand;
+        public DelegateCommand ShowAdminWindowCommand => _showAdminWindowCommand ?? (_showAdminWindowCommand = new DelegateCommand(ShowAdminWindow));
+        private void ShowAdminWindow()
+        {
+            DeactiveteAllWindow();
+            AdminWindow = Visibility.Visible;
         }
 
         public Visibility PasswordWindow { get { return _passwordWindow; } set { SetProperty(ref _passwordWindow, value); } }
@@ -88,6 +119,10 @@ namespace Vending.Client.Main
         private Visibility _basketWindow;
         public Visibility AdminWindow { get { return _adminWindow; } set { SetProperty(ref _adminWindow, value); } }
         private Visibility _adminWindow;
+        public Visibility ProductBaseWindow { get { return _productBasWindow; } set { SetProperty(ref _productBasWindow, value); } }
+        private Visibility _productBasWindow;
+        public Visibility UserBaseWindow { get { return _userBaseWindow; } set { SetProperty(ref _userBaseWindow, value); } }
+        private Visibility _userBaseWindow;
 
     }
 
