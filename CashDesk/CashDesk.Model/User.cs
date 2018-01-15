@@ -10,6 +10,9 @@ namespace CashDesk.Model
 {
     public class User : BindableBase
     {
+        private User ap;
+        private PurchaseManager _manager;
+
         internal static IReadOnlyList<User> BaseUsers => new List<User>()
                 {
                     new User("Admin",UserType.Admin),
@@ -20,6 +23,12 @@ namespace CashDesk.Model
         {
             Name = name;
             UserType = userType;
+        }
+
+        public User(User ap, PurchaseManager manager)
+        {
+            this.ap = ap;
+            _manager = manager;
         }
 
         public string Name { get; }

@@ -19,6 +19,7 @@ namespace CashDesk.Model
         private const string _crioptoPassword = "CrioptoPassword";
         private const string _salt = "Salt";
         private const string _userType = "UserType";
+        //UsersInBase
 
         private XDocument xdoc;
 
@@ -33,8 +34,14 @@ namespace CashDesk.Model
                 CreateXml();
                 xdoc = XDocument.Load(_nameFile);
             }
+
+            _usersInBase = GetAllUsers();
+            UsersInBase = new ReadOnlyObservableCollection<User>(_usersInBase);
             //Test();
         }
+
+        public ReadOnlyObservableCollection<User> UsersInBase { get; }
+        private readonly ObservableCollection<User> _usersInBase;
 
         private void Test()
         {
