@@ -79,7 +79,7 @@ namespace Vending.Client.Main
             set
             {
                 SetProperty(ref _selectedAdminProduct, value);
-                TmpSelectedAdminProduct = new AdminProductVM(value.ProductStack, value.Manager);
+                TmpSelectedAdminProduct = new AdminProductVM(value, value.Manager);
             } }
         private ProductVM _selectedAdminProduct;
 
@@ -144,12 +144,15 @@ namespace Vending.Client.Main
 
     public class ProductVM : BindableBase
     {
-        public ProductStack ProductStack { get; }
+        public ProductStack ProductStack { get { return _productStack; } set { SetProperty(ref _productStack, value); } }
+        public ProductStack _productStack;
         public PurchaseManager Manager { get; }
         public ProductVM(ProductStack productStack, PurchaseManager manager = null)
         {
             ProductStack = productStack;
             productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
+            productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Price)); };
+            productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Name)); };
 
             if (manager != null)
             {
@@ -197,11 +200,11 @@ namespace Vending.Client.Main
         public ProductStack ProductStack { get; }
         public PurchaseManager Manager { get; }
 
-        public AdminProductVM(ProductStack productStack, PurchaseManager manager = null)
+        public AdminProductVM(ProductVM productVM, PurchaseManager manager = null)
         {
             Manager = manager;
-            ProductStack = productStack;
-            productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
+            ProductStack = productVM.ProductStack;
+            productVM.ProductStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
 
             if (manager != null)
             {
@@ -220,6 +223,8 @@ namespace Vending.Client.Main
                     Manager.ProductManager.ChangeProduct(ProductStack.Product.Name, Name, Price);
                 }
 
+                ProductStack.Product.Name = _TmpName;
+                ProductStack.Product.Price = _TmpPrice;
             });
 
             _TmpName = ProductStack.Product.Name;

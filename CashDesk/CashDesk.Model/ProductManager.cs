@@ -175,8 +175,9 @@ namespace CashDesk.Model
                 product.Element(_priceXElement).Value = newPrice.ToString();
 
                 var productInAutomata = _productsInAutomata.First(x => x.Product.Name == name);
-                productInAutomata.Product.Name = newName;
-                productInAutomata.Product.Price = newPrice;
+                //productInAutomata.Product.Name = newName;
+                //productInAutomata.Product.Price = newPrice;
+                productInAutomata.Product = new Product(newName, newPrice);
 
             }
             SaveInXml();

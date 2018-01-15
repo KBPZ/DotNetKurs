@@ -9,10 +9,19 @@ namespace CashDesk.Model
         public ProductStack(Product product, int amount)
         {
             Product = product;
-            _amount = amount;
+            Amount = amount;
         }
 
-        public Product Product { get; }
+        public Product Product
+        {
+            get { return _product; }
+            set
+            {
+                SetProperty(ref _product, value);
+            }
+        }
+        private Product _product;
+
 
         public int Amount
         {
