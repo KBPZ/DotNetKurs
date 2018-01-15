@@ -82,6 +82,28 @@ namespace Vending.Client.Main
         public AdminProductVM TmpSelectedAdminProduct { get { return _tmpSelectedAdminProduct; } set { SetProperty(ref _tmpSelectedAdminProduct, value); } }
         private AdminProductVM _tmpSelectedAdminProduct;
 
+        private DelegateCommand _removeProductCommand;
+        public DelegateCommand RemoveContactCommand => _removeProductCommand ?? (_removeProductCommand = new DelegateCommand(RemoveProduct, CanRemoveProduct));
+
+        private void RemoveProduct()
+        {
+            _manager.ProductManager.DeleteProduct(TmpSelectedAdminProduct.Name);
+        }
+
+        private bool CanRemoveProduct()
+        {
+            if (TmpSelectedAdminProduct == null)
+                return false;
+            return true;
+        }
+
+        private DelegateCommand _createProductCommand;
+        public DelegateCommand CreateProductCommand => _createProductCommand ?? (_createProductCommand = new DelegateCommand(CreateProduct));
+        private void CreateProduct()
+        {
+            _manager.ProductManager.AddProduct("Новый товар", 0, 0);
+        }
+
         //функция синхронизации ReadOnly коллекции элементов модели и соответствующей коллекции VM, 
         //в конструкторы которых передается эти экземпляры модели, указываемые в делегате
         private static void Watch<T, T2>(ReadOnlyObservableCollection<T> collToWatch, ObservableCollection<T2> collToUpdate,
