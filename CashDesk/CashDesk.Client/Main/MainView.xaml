@@ -127,18 +127,13 @@
                             <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Amount}" />
                         </Grid>
                     </Grid>
-                    <Grid Grid.Row="1">
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Button Content="Сохранить изменения" Margin="3,3,3,3.4" Command="{Binding SaveChanges}"/>
-                        </StackPanel>
                 </Grid>
-        </Grid>
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="0">
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button Content="Добавить новый товар" Margin="3,3,3,3.4" />
-                    <Button Content="Удалить товар" Margin="3,3,3,3.4"/>
-                    <Button Content="Сохранить изменения" Margin="3,3,3,3.4" />
+                    <Button Content="Добавить новый товар" Command="{Binding CreateProductCommand}" Margin="3,3,3,3.4" />
+                    <Button Content="Удалить товар" Command="{Binding RemoveContactCommand}" Margin="3,3,3,3.4"/>
+                    <Button Content="Сохранить изменения" Command="{Binding SaveChanges}" Margin="3,3,3,3.4" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1">
